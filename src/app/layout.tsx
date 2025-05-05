@@ -1,9 +1,16 @@
+import type React from "react";
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
 import { AppSidebar } from "@/components/app-sidebar";
-import { SearchQueryProvider } from "@/context/SearchQueryContext"; // Import context
+import { SearchQueryProvider } from "@/context/SearchQueryContext";
+import { MovieProvider } from "@/context/MovieContext";
+import { FavoritesProvider } from "@/context/FavoritesContext";
+import { Suspense } from "react";
+import {
+  ClerkProvider
+} from "@clerk/nextjs";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -26,22 +33,29 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
-      <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
-      >
-        <SearchQueryProvider>
-          <SidebarProvider>
-            <AppSidebar />
-            <main className="p-8">
-              <header className="flex h-16 shrink-0 items-center gap-2 border-b">
-                <SidebarTrigger className="-ml-1 cursor-pointer" />
-              </header>
-              {children}
-            </main>
-          </SidebarProvider>
-        </SearchQueryProvider>
-      </body>
-    </html>
+    <ClerkProvider>
+      <html lang="en">
+        <FavoritesProvider>
+          <MovieProvider>
+            <body
+              className={`${geistSans.variable} ${geistMono.variable} antialiased`}
+            >
+              <SearchQueryProvider>
+                <SidebarProvider>
+                  <AppSidebar />
+                  <main className="p-8 w-full h-screen">
+                    <header className="flex h-16 shrink-0 items-center gap-2 border-b">
+                     
+                      <SidebarTrigger className="-ml-1 cursor-pointer" />
+                    </header>
+                    <Suspense>{children}</Suspense>
+                  </main>
+                </SidebarProvider>
+              </SearchQueryProvider>
+            </body>
+          </MovieProvider>
+        </FavoritesProvider>
+      </html>
+    </ClerkProvider>
   );
 }

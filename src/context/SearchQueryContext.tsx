@@ -1,8 +1,6 @@
 "use client";
-// context/SearchQueryContext.tsx
-import React, { createContext, useContext, useState } from "react";
+import React, { createContext, useContext, useState, useEffect } from "react";
 
-// Define context and types
 interface SearchQueryContextType {
   searchQuery: string;
   setSearchQuery: (query: string) => void;
@@ -16,7 +14,6 @@ export const useSearchQuery = () => {
   const context = useContext(SearchQueryContext);
   if (!context) {
     throw new Error("useSearchQuery must be used within a SearchQueryProvider");
-    
   }
   return context;
 };
@@ -27,9 +24,20 @@ export const SearchQueryProvider = ({
   children: React.ReactNode;
 }) => {
   const [searchQuery, setSearchQuery] = useState("");
+  const [debouncedQuery, setDebouncedQuery] = useState(searchQuery);
+
+  useEffect(() => {
+    const timeoutId = setTimeout(() => {
+      setDebouncedQuery(searchQuery);
+    }, 300);
+
+    return () => clearTimeout(timeoutId);
+  }, [searchQuery]);
 
   return (
-    <SearchQueryContext.Provider value={{ searchQuery, setSearchQuery }}>
+    <SearchQueryContext.Provider
+      value={{ searchQuery: debouncedQuery, setSearchQuery }}
+    >
       {children}
     </SearchQueryContext.Provider>
   );

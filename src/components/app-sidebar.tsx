@@ -1,7 +1,6 @@
 "use client";
 
-// AppSidebar.tsx
-import { useSearchQuery } from "@/context/SearchQueryContext"; // Import the hook
+import { useSearchQuery } from "@/context/SearchQueryContext";
 import {
   Sidebar,
   SidebarContent,
@@ -41,10 +40,10 @@ const data = {
 };
 
 export function AppSidebar() {
-  const { setSearchQuery } = useSearchQuery(); // Get the setter from context
+  const { setSearchQuery } = useSearchQuery();
 
   const handleSearch = (query: string) => {
-    setSearchQuery(query); // Update search query in context
+    setSearchQuery(query);
   };
 
   return (
@@ -71,7 +70,7 @@ export function AppSidebar() {
         </SidebarGroup>
       </SidebarContent>
       <SidebarFooter>
-        <NavUser user={data.user} />
+        <NavUser />
       </SidebarFooter>
       <SidebarRail />
     </Sidebar>
